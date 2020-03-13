@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
@@ -28,6 +29,8 @@ class UsersController extends Controller
             'email' => $request->email,
             'password' => bcrypt($request->password),
         ]);
+        // 信息插入成功后，将用户自动登录
+        Auth::login($user);
         // 成功后消息提示
         session()->flash("success", "欢迎，您将在这里开启一段新的旅程~");
         return redirect()->route('users.show', [$user]);
