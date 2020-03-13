@@ -22,7 +22,7 @@ class SessionsController extends Controller
             'password' => 'required'
         ]);
         // 验证用户提交的信息是否和数据库中的一致
-        if(Auth::attempt($credentials)) {
+        if(Auth::attempt($credentials, $request->has('remember'))) {
             session()->flash("success", "欢迎回来！");
             return redirect()->route("users.show", [Auth::user()]);
         } else {
