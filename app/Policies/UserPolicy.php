@@ -15,6 +15,12 @@ class UserPolicy
         return $currentUser->id === $user->id;
     }
 
+    // 验证用户为管理员并且不是本人
+    public function destroy(User $currentUser, User $user)
+    {
+        return ($currentUser->id !== $user->id) && ($currentUser->is_admin);
+    }
+
     /**
      * Create a new policy instance.
      *
