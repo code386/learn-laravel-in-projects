@@ -8,6 +8,17 @@ use Illuminate\Support\Facades\Auth;
 
 class UsersController extends Controller
 {
+    // 利用中间件进行登录验证
+    public function __construct()
+    {
+        $this->middleware('auth', [
+            'except' => ['show', 'create', 'store']
+        ]);
+        $this->middleware('guest', [
+            'only' => ['create']
+        ]);
+    }
+
     // 跳转至注册页面
     public function create()
     {
@@ -45,12 +56,16 @@ class UsersController extends Controller
     // 跳转至用户信息编辑页面
     public function edit(User $user)
     {
+        // 验证要编辑的用户id和传递的用户id是否一致
+        $this->authorize('update', $user);
         return view('users.edit', compact('user'));
     }
 
     // 更新用户信息
     public function update(User $user, Request $request)
     {
+        // 验证要编辑的用户id和传递的用户id是否一致
+        $this->authorize('update', $user);
         // 验证信息
         $this->validate($request, [
             'name' => 'required|max:50',
