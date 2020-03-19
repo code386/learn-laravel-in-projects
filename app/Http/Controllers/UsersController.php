@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class UsersController extends Controller
 {
@@ -12,11 +13,43 @@ class UsersController extends Controller
     public function __construct()
     {
         $this->middleware('auth', [
-            'except' => ['show', 'create', 'store', 'index']
+            'except' => ['show', 'create', 'store', 'index', 'confirmEmail']
         ]);
         $this->middleware('guest', [
             'only' => ['create']
         ]);
+    }
+
+    // 验证邮箱动作
+    public function confirmEmail($token)
+    {
+        // 通过token查找是否存在，不存在抛出错误
+        $user = User::where('activation_token', $token)->firstOrFail();
+
+        // 更正激活信息
+        $user->activation_token = null;
+        $user->activated = true;
+        $user->save();
+
+        // 登录、提示信息和跳转页面
+        Auth::login($user);
+        session()->flash('success', '恭喜你，激活成功！');
+        return redirect()->route('users.show', $user);
+    }
+
+    // 发送邮件验证
+    protected function sendEmailConfirmationTo($user)
+    {
+        $view = "emails.confirm";
+        $data = compact('user');
+        $from = "public@ouccs.net";
+        $name = "管理员";
+        $to = $user->email;
+        $subject = "感谢注册 Weibo 应用！请确认你的邮箱。";
+
+        Mail::send($view, $data, function ($message) use ($from, $name, $to, $subject) {
+            $message->from($from, $name)->to($to)->subject($subject);
+        });
     }
 
     // 删除用户
@@ -57,10 +90,12 @@ class UsersController extends Controller
             'password' => bcrypt($request->password),
         ]);
         // 信息插入成功后，将用户自动登录
-        Auth::login($user);
+        // Auth::login($user);
         // 成功后消息提示
-        session()->flash("success", "欢迎，您将在这里开启一段新的旅程~");
-        return redirect()->route('users.show', [$user]);
+        $this->sendEmailConfirmationTo($user);
+        session()->flash("success", "邮件已发送到你的注册邮箱上，请注意查收");
+        //return redirect()->route('users.show', [$user]);
+        return redirect('/');
     }
 
     // 个人用户信息界面
