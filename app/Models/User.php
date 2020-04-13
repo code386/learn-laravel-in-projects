@@ -13,6 +13,12 @@ class User extends Authenticatable
 
     protected $table = 'users';
 
+    // 一个用户拥有多个发布的文章
+    public function statuses()
+    {
+        return $this->hasMany(Status::class);
+    }
+
     /**
      * The attributes that are mass assignable.
      *
