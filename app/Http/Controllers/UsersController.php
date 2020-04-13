@@ -101,7 +101,9 @@ class UsersController extends Controller
     // 个人用户信息界面
     public function show(User $user)
     {
-        return view('users.show', compact('user'));
+        // 个人用户发布的微博
+        $statuses = $user->statuses()->orderBy('created_at', 'desc')->paginate(10);
+        return view('users.show', compact('user', 'statuses'));
     }
 
     // 跳转至用户信息编辑页面
