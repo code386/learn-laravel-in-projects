@@ -13,6 +13,12 @@ class User extends Authenticatable
 
     protected $table = 'users';
 
+    // 查询所有用户发布的微博
+    public function feed()
+    {
+        return $this->statuses()->orderBy('created_at', 'desc');
+    }
+
     // 一个用户拥有多个发布的文章
     public function statuses()
     {
