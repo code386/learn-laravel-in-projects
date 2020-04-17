@@ -9,6 +9,12 @@ class UserPolicy
 {
     use HandlesAuthorization;
 
+    // 关注的id不能是自己的id
+    public function follow(User $currentUser, User $user)
+    {
+        return $currentUser->id !== $user->id;
+    }
+
     // 验证登录用户id和传递id是否一致
     public function update(User $currentUser, User $user)
     {

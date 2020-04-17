@@ -14,9 +14,10 @@ class User extends Authenticatable
     protected $table = 'users';
 
     // 返回真假，判断现在登录的用户A，是否已经关注过用户B
+    // 通过判断B用户的id是否在用户A的关注列表里
     public function isFollowing($user_id)
     {
-        return $this->followings()->contains($user_id);
+        return $this->followings->contains($user_id);
     }
 
     // 关注
@@ -32,7 +33,7 @@ class User extends Authenticatable
     public function unfollow($user_ids)
     {
         if ( !is_array($user_ids) ) {
-            $user_ids =  compact("user_ids");
+            $user_ids = compact("user_ids");
         }
         $this->followings()->detach($user_ids);
     }
