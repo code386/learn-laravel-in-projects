@@ -50,10 +50,15 @@ class User extends Authenticatable
         return $this->belongsToMany(User::class, 'followers', 'follower_id', 'user_id');
     }
 
-    // 查询所有用户发布的微博
+    // 查询用户发布的微博和关注的人发布的微博
     public function feed()
     {
-        return $this->statuses()->orderBy('created_at', 'desc');
+        // 获得用户关注的人的所有id
+        $user_ids = $this->followings->pluck('id')->toArray();
+        // 将自己的id也放入$user_ids中
+        array_push($user_ids, $this->id);
+        //return $this->statuses()->orderBy('created_at', 'desc');
+        return Status::whereIn('user_id', $user_ids)->with('user')->orderBy('created_at', 'desc');
     }
 
     // 一个用户拥有多个发布的文章
