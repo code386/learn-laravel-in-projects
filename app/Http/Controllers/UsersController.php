@@ -20,6 +20,22 @@ class UsersController extends Controller
         ]);
     }
 
+    // 关注的人列表
+    public function followings(User $user)
+    {
+        $users = $user->followings()->paginate(30);
+        $title = $user->name . "关注列表";
+        return view('users.show_follow', compact('users', 'title'));
+    }
+
+    // 粉丝列表
+    public function followers(User $user)
+    {
+        $users = $user->followers()->paginate(30);
+        $title = $user->name . "粉丝列表";
+        return view('users.show_follow', compact('users', 'title'));
+    }
+
     // 验证邮箱动作
     public function confirmEmail($token)
     {
