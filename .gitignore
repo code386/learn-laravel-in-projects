@@ -10,23 +10,4 @@ Homestead.yaml
 npm-debug.log
 yarn-error.log
 
-.idea
-/logs
-/data
-.env
-/.project
-.docker-sync
-/jenkins/jenkins_home
-
-/logstash/pipeline/*.conf
-/logstash/config/pipelines.yml
-
-/nginx/ssl/*.crt
-/nginx/ssl/*.key
-/nginx/ssl/*.csr
-
-/.devcontainer/*
-!/.devcontainer/devcontainer.example.json
-!/.devcontainer/docker-compose.extend-example.yml
-
-.DS_Store
+/laradock
