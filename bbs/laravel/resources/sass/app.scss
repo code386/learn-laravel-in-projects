@@ -9,6 +9,8 @@ html {
 body {
     font-family: Helvetica, "Microsoft YaHei", Arial, sans-serif;
     font-size: 14px;
+    /* 底部外边距举例footer的举例 */
+    margin-bottom: 60px;
 }
 
 /* header导航栏 */
@@ -27,7 +29,7 @@ body {
     position: absolute;
     bottom: 0;
     width: 100%;
-    // 设置footer高度
+    /* 设置footer的高度 */
     height: 60px;
     background-color: #000;
 
@@ -42,6 +44,9 @@ body {
             a {
                 color: inherit;
             }
+
         }
+
     }
+
 }
